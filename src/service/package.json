@@ -1,0 +1,37 @@
+{
+  "name": "otelab",
+  "version": "1.0.0",
+  "description": "opentelemetry lab mgl870 - observability",
+  "main": "src/app.ts",
+  "scripts": {
+    "start": "npx ts-node --require ./instrumentation.ts app.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@grpc/grpc-js": "1.10.8",
+    "@grpc/proto-loader": "0.7.13",
+    "@openfeature/flagd-provider": "0.13.0",
+    "@openfeature/server-sdk": "1.14.0",
+    "@opentelemetry/api": "1.8.0",
+    "@opentelemetry/auto-instrumentations-node": "0.46.1",
+    "@opentelemetry/core": "1.24.1",
+    "@opentelemetry/exporter-metrics-otlp-grpc": "0.51.1",
+    "@opentelemetry/exporter-metrics-otlp-http": "^0.53.0",
+    "@opentelemetry/exporter-trace-otlp-grpc": "0.51.1",
+    "@opentelemetry/exporter-trace-otlp-http": "^0.53.0",
+    "@opentelemetry/resource-detector-container": "0.3.9",
+    "@opentelemetry/resources": "1.24.1",
+    "@opentelemetry/sdk-metrics": "^1.24.1",
+    "@opentelemetry/sdk-node": "0.51.1",
+    "@opentelemetry/semantic-conventions": "^1.27.0",
+    "express": "^4.21.1",
+    "grpc-js-health-check": "1.1.0",
+    "otelab": "file:",
+    "pino-loki": "^2.3.1",
+    "ts-node": "^10.9.2",
+    "winston": "^3.15.0",
+    "winston-loki": "^6.1.3"
+  }
+}
