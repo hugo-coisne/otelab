@@ -131,10 +131,6 @@ services:
     container_name: k6
     ports:
       - "6565:6565"
-    environment:
-      - K6_OUT=influxdb=http://influxdb:8086/k6
     volumes:
-      - ./src/k6/scripts:/scripts
-    command: run /scripts/test.js
-    depends_on:
-      - service
+      - ./src/k6/scripts/test.js:/test.js
+    command: run /test.js
