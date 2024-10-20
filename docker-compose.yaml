@@ -2,19 +2,13 @@ networks:
   default:
     name: otel-libraries
     driver: bridge
-  k6:
-  grafana:
 
 services:
   service:
     container_name: service
     build:
-      context: ./
+      context: ./src/service
       dockerfile: ${SERVICE_DOCKERFILE}
-    deploy:
-      resources:
-        limits:
-          memory: 120M
     restart: unless-stopped
     ports:
       - "${SERVICE_PORT}:${SERVICE_PORT}"
@@ -127,9 +121,7 @@ services:
     command: -config.file=/etc/loki/local-config.yaml
   influxdb:
     image: influxdb:1.8
-    networks:
-      - k6
-      - grafana
+    container_name: influxdb
     ports:
       - "8086:8086"
     environment:
@@ -137,11 +129,12 @@ services:
   k6:
     image: grafana/k6:latest
     container_name: k6
-    networks:
-      - k6
     ports:
       - "6565:6565"
     environment:
       - K6_OUT=influxdb=http://influxdb:8086/k6
     volumes:
-      - ./src/k6/examples:/scripts
+      - ./src/k6/scripts:/scripts
+    command: run /scripts/test.js
+    depends_on:
+      - service
