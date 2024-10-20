@@ -1,9 +1,8 @@
 import { trace } from "@opentelemetry/api";
 import express, { Express } from "express";
 import { rollTheDice } from "./dice";
-import { getLogger } from "./logger";
 
-const logger = getLogger();
+import logger from './logger';
 
 const tracer = trace.getTracer("dice-server", "0.1.0");
 
