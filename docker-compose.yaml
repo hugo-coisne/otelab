@@ -5,10 +5,8 @@ networks:
 
 services:
   service:
+    image: otelab-service:latest
     container_name: service
-    build:
-      context: ./src/service
-      dockerfile: ${SERVICE_DOCKERFILE}
     restart: unless-stopped
     ports:
       - "${SERVICE_PORT}:${SERVICE_PORT}"
@@ -21,6 +19,8 @@ services:
     depends_on:
       otelcol:
         condition: service_started
+    profiles:
+      - main
 
   # Telemetry Components
 
@@ -33,39 +33,34 @@ services:
       - "--prometheus.server-url=http://${PROMETHEUS_ADDR}"
       - "--prometheus.query.normalize-calls=true"
       - "--prometheus.query.normalize-duration=true"
-    deploy:
-      resources:
-        limits:
-          memory: 400M
     restart: unless-stopped
     ports:
       - "${JAEGER_SERVICE_PORT}:${JAEGER_SERVICE_PORT}"
       - "${OTEL_COLLECTOR_PORT_GRPC}"
     environment:
       - METRICS_STORAGE_TYPE=prometheus
-    
+    profiles:
+      - main
 
   grafana:
     image: ${GRAFANA_IMAGE}
     container_name: grafana
-    deploy:
-      resources:
-        limits:
-          memory: 100M
     restart: unless-stopped
+    environment:
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_BASIC_ENABLED=false
     volumes:
       - ./src/grafana/grafana.ini:/etc/grafana/grafana.ini
       - ./src/grafana/provisioning/:/etc/grafana/provisioning/
     ports:
       - "${GRAFANA_SERVICE_PORT}:${GRAFANA_SERVICE_PORT}"
+    profiles:
+      - main
 
   otelcol:
     image: ${COLLECTOR_CONTRIB_IMAGE}
     container_name: otel-col
-    deploy:
-      resources:
-        limits:
-          memory: 200M
     restart: unless-stopped
     command: [ "--config=/etc/otelcol-config.yml", "--config=/etc/otelcol-config-extras.yml" ]
     user: 0:0
@@ -86,6 +81,8 @@ services:
       - OTEL_COLLECTOR_HOST
       - OTEL_COLLECTOR_PORT_GRPC
       - OTEL_COLLECTOR_PORT_HTTP
+    profiles:
+      - main
 
   prometheus:
     image: ${PROMETHEUS_IMAGE}
@@ -102,15 +99,14 @@ services:
       - --enable-feature=otlp-write-receiver
     volumes:
       - ./src/prometheus/prometheus-config.yaml:/etc/prometheus/prometheus-config.yaml
-    deploy:
-      resources:
-        limits:
-          memory: 300M
     restart: unless-stopped
     depends_on:
       - service
     ports:
       - "${PROMETHEUS_SERVICE_PORT}:${PROMETHEUS_SERVICE_PORT}"
+    profiles:
+      - main
+
   loki:
     container_name: loki
     image: grafana/loki:main
@@ -119,6 +115,8 @@ services:
     volumes:
       - ./src/loki/loki-config.yaml:/etc/loki/local-config.yaml
     command: -config.file=/etc/loki/local-config.yaml
+    profiles:
+      - main
   influxdb:
     image: influxdb:1.8
     container_name: influxdb
@@ -126,6 +124,8 @@ services:
       - "8086:8086"
     environment:
       - INFLUXDB_DB=k6  
+    profiles:
+      - main
   k6:
     image: grafana/k6:latest
     container_name: k6
@@ -134,3 +134,7 @@ services:
     volumes:
       - ./src/k6/scripts/test.js:/test.js
     command: run /test.js
+    environment:
+      - K6_OUT=influxdb=http://influxdb:8086/k6
+    profiles:
+      - k6

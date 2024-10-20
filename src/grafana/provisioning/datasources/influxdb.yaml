@@ -1,0 +1,10 @@
+apiVersion: 1
+
+datasources:
+  - name: InfluxDB
+    type: influxdb
+    uid: ee1hibj3074sgf
+    url: http://influxdb:8086
+    jsonData:
+      dbName: k6
+      httpMode: GET
