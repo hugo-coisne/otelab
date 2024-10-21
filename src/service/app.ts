@@ -2,8 +2,9 @@ import { trace } from "@opentelemetry/api";
 import express, { Express } from "express";
 import { rollTheDice } from "./dice";
 
-import logger from './logger';
+import { getLogger } from './logger';
 
+const logger = getLogger();
 const tracer = trace.getTracer("dice-server", "0.1.0");
 
 const PORT: number = parseInt(process.env.SERVICE_PORT || "8080");

@@ -3,8 +3,9 @@
 
 ## Requirements
 - Docker
+- Building service image : ```cd src/service``` then ```docker build -t otelab-service .```
 
-### Start main services
+### Start main services (from project root directory)
 ```docker compose --profile main up -d --force-recreate --remove-orphans```
 
 ### Start k6 load test
