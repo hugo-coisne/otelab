@@ -5,8 +5,8 @@ networks:
 
 services:
   service:
-    image: otelab-service:latest
-    container_name: service
+    image: otelab-service-a:latest
+    container_name: service-a
     restart: unless-stopped
     ports:
       - "${SERVICE_PORT}:${SERVICE_PORT}"
@@ -15,7 +15,24 @@ services:
       - OTEL_EXPORTER_OTLP_ENDPOINT
       - OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
       - OTEL_RESOURCE_ATTRIBUTES
-      - OTEL_SERVICE_NAME=service
+      - OTEL_SERVICE_NAME=service-a
+    depends_on:
+      otelcol:
+        condition: service_started
+    profiles:
+      - main
+  service-b:
+    image: otelab-service-b:latest
+    container_name: service-b
+    restart: unless-stopped
+    ports:
+      - "${SERVICE_B_PORT}:${SERVICE_B_PORT}"
+    environment:
+      - SERVICE_B_PORT
+      - OTEL_EXPORTER_OTLP_ENDPOINT
+      - OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
+      - OTEL_RESOURCE_ATTRIBUTES
+      - OTEL_SERVICE_NAME=service-b
     depends_on:
       otelcol:
         condition: service_started

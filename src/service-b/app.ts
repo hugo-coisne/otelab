@@ -6,7 +6,7 @@ import { getLogger } from "./logger";
 const logger = getLogger();
 const tracer = trace.getTracer("service-b", "0.1.0");
 
-const PORT: number = parseInt(process.env.SERVICE_PORT || "8080");
+const PORT: number = parseInt(process.env.SERVICE_B_PORT || "8081");
 const app: Express = express();
 
 interface Statement {

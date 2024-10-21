@@ -3,7 +3,7 @@
 
 ## Requirements
 - Docker
-- Building service image : ```cd src/service``` then ```docker build -t otelab-service .```
+- Building service images : ```docker build -t otelab-service-a src/service/.``` and ```docker build -t otelab-service-b src/service-b/.```
 
 ### Start main services (from project root directory)
 ```docker compose --profile main up -d --force-recreate --remove-orphans```
