@@ -5,7 +5,7 @@ import { rollTheDice } from "./dice";
 import { getLogger } from "./logger";
 
 const logger = getLogger();
-const tracer = trace.getTracer("service-a", "0.1.0");
+const tracer = trace.getTracer("service-b", "0.1.0");
 
 const PORT: number = parseInt(process.env.SERVICE_PORT || "8080");
 const app: Express = express();
