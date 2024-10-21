@@ -10,20 +10,6 @@ const tracer = trace.getTracer("service-a", "0.1.0");
 const PORT: number = parseInt(process.env.SERVICE_PORT || "8080");
 const app: Express = express();
 
-app.get("/rolldice", (req, res) => {
-  const rolls = req.query.rolls ? parseInt(req.query.rolls.toString()) : NaN;
-  if (isNaN(rolls)) {
-    logger.warn("Request parameter 'rolls' is missing or not a number.");
-    res
-      .status(400)
-      .send("Request parameter 'rolls' is missing or not a number.");
-    return;
-  }
-  logger.info(`Rolling the dice ${rolls} times.`);
-  const result = rollTheDice(rolls, 1, 6);
-  res.send(JSON.stringify(result));
-  logger.info(`Dice rolled with result: ${JSON.stringify(result)}`);
-});
 
 interface User {
   id: number;
