@@ -1,169 +1,155 @@
 import { Span, trace } from "@opentelemetry/api";
 import express, { Express, Request, Response } from "express";
-import { rollTheDice } from "./dice";
 
 import { getLogger } from "./logger";
 
 const logger = getLogger();
-const tracer = trace.getTracer("service-a", "0.1.0");
+const tracer = trace.getTracer("service-b", "0.1.0");
 
 const PORT: number = parseInt(process.env.SERVICE_PORT || "8080");
 const app: Express = express();
 
-app.get("/rolldice", (req, res) => {
-  const rolls = req.query.rolls ? parseInt(req.query.rolls.toString()) : NaN;
-  if (isNaN(rolls)) {
-    logger.warn("Request parameter 'rolls' is missing or not a number.");
-    res
-      .status(400)
-      .send("Request parameter 'rolls' is missing or not a number.");
-    return;
-  }
-  logger.info(`Rolling the dice ${rolls} times.`);
-  const result = rollTheDice(rolls, 1, 6);
-  res.send(JSON.stringify(result));
-  logger.info(`Dice rolled with result: ${JSON.stringify(result)}`);
-});
-
-interface User {
+interface Statement {
   id: number;
-  name: string;
-  surname: string;
+  UserId: number;
+  value: string;
 }
 
-let users: User[] = [
+let statements: Statement[] = [
   {
     id: 1,
-    name: "hugo",
-    surname: "coisne",
+    UserId: 1,
+    value: "This is a statement.",
   },
   {
     id: 2,
-    name: "leo",
-    surname: "saintier",
+    UserId: 1,
+    value: "This is a statement from the same user.",
   },
   {
     id: 3,
-    name: "fabio",
-    surname: "petrillo",
+    UserId: 2,
+    value: "This is a statement from a different user.",
   },
 ];
 
-// GET: Retrieve all users
-app.get("/users", (req, res) => {
-  logger.info("Fetching all users.");
-  res.json(users);
+// GET: Retrieve all statements
+app.get("/statements", (req, res) => {
+  logger.info("Fetching all statements.");
+  res.json(statements);
 });
 
+// POST: Add a new statement
 function postHandler(req: Request) {
-  return tracer.startActiveSpan("userPostHandler", (span: Span) => {
-    const maxId = users.length > 0 ? Math.max(...users.map((user) => user.id)) : 0;
-    const user: User = {
+  return tracer.startActiveSpan("statementPostHandler", (span: Span) => {
+    const maxId = statements.length > 0 ? Math.max(...statements.map((stmt) => stmt.id)) : 0;
+    const statement: Statement = {
       id: maxId + 1, // Generate a unique ID
-      name: req.query.name!.toString(),
-      surname: req.query.surname!.toString(),
+      UserId: parseInt(req.query.UserId!.toString()),
+      value: req.query.value!.toString(),
     };
-    users.push(user);
-    logger.info(`New user created: ${JSON.stringify(user)}`);
+    statements.push(statement);
+    logger.info(`New statement created: ${JSON.stringify(statement)}`);
     span.end();
   });
 }
 
-// POST: Add a new user
-app.post("/users", (req, res) => {
+app.post("/statements", (req, res) => {
   postHandler(req);
-  res.status(200).json(users[users.length - 1]);
-  logger.info("User successfully added.");
+  res.status(200).json(statements[statements.length - 1]);
+  logger.info("Statement successfully added.");
 });
 
+// PUT: Replace an existing statement by id
 function putHandler(req: Request) {
-  return tracer.startActiveSpan("userPutHandler", (span: Span) => {
-    const userId = parseInt(req.params.id);
-    const userIndex = users.findIndex((user) => user.id === userId);
+  return tracer.startActiveSpan("statementPutHandler", (span: Span) => {
+    const statementId = parseInt(req.params.id);
+    const stmtIndex = statements.findIndex((stmt) => stmt.id === statementId);
     let data: { status: number; content: any } = { status: -1, content: null };
 
-    if (userIndex !== -1) {
-      const updatedUser: User = {
-        id: userId,
-        name: req.query.name!.toString(),
-        surname: req.query.surname!.toString(),
+    if (stmtIndex !== -1) {
+      const updatedStatement: Statement = {
+        id: statementId,
+        UserId: parseInt(req.query.UserId!.toString()),
+        value: req.query.value!.toString(),
       };
-      users[userIndex] = updatedUser;
-      data = { status: 200, content: updatedUser };
-      logger.info(`User updated: ${JSON.stringify(updatedUser)}`);
+      statements[stmtIndex] = updatedStatement;
+      data = { status: 200, content: updatedStatement };
+      logger.info(`Statement updated: ${JSON.stringify(updatedStatement)}`);
     } else {
-      data = { status: 404, content: "User not found" };
-      logger.warn(`User with id ${userId} not found.`);
+      data = { status: 404, content: "Statement not found" };
+      logger.warn(`Statement with id ${statementId} not found.`);
     }
     span.end();
     return data;
   });
 }
 
-// PUT: Replace an existing user by id
-app.put("/users/:id", (req, res) => {
-  const data: { status: number; content: string } = putHandler(req);
+app.put("/statements/:id", (req, res) => {
+  const data: { status: number; content: any } = putHandler(req);
   res.status(data.status).json(data.content);
   logger.info(`PUT request completed with status ${data.status}.`);
 });
 
+// PATCH: Partially update a statement by id
 function patchHandler(req: Request) {
-  return tracer.startActiveSpan("userPatchHandler", (span: Span) => {
+  return tracer.startActiveSpan("statementPatchHandler", (span: Span) => {
     let data: { status: number; content: any } = { status: -1, content: null };
-    const userId = parseInt(req.params.id);
-    const user = users.find((u) => u.id === userId);
+    const statementId = parseInt(req.params.id);
+    const statement = statements.find((stmt) => stmt.id === statementId);
 
-    if (user) {
-      if (req.query.name) {
-        user.name = req.query.name!.toString();
-        logger.info(`Updated user name to: ${user.name}`);
+    if (statement) {
+      if (req.query.UserId) {
+        statement.UserId = parseInt(req.query.UserId!.toString());
+        logger.info(`Updated statement UserId to: ${statement.UserId}`);
       }
-      if (req.query.surname) {
-        user.surname = req.query.surname!.toString();
-        logger.info(`Updated user surname to: ${user.surname}`);
+      if (req.query.value) {
+        statement.value = req.query.value!.toString();
+        logger.info(`Updated statement value to: ${statement.value}`);
       }
-      data = { status: 200, content: user };
+      data = { status: 200, content: statement };
     } else {
-      data = { status: 404, content: "User not found" };
-      logger.warn(`User with id ${userId} not found.`);
+      data = { status: 404, content: "Statement not found" };
+      logger.warn(`Statement with id ${statementId} not found.`);
     }
     span.end();
     return data;
   });
 }
 
-// PATCH: Partially update a user by id
-app.patch("/users/:id", (req, res) => {
-  const data: { status: number; content: string } = patchHandler(req);
+app.patch("/statements/:id", (req, res) => {
+  const data: { status: number; content: any } = patchHandler(req);
   res.status(data.status).json(data.content);
   logger.info(`PATCH request completed with status ${data.status}.`);
 });
 
+// DELETE: Remove a statement by id
 function deleteHandler(req: Request) {
-  return tracer.startActiveSpan("userDeleteHandler", (span: Span) => {
+  return tracer.startActiveSpan("statementDeleteHandler", (span: Span) => {
     let data: { status: number; content: any } = { status: -1, content: null };
-    const userId = parseInt(req.params.id);
-    const userIndex = users.findIndex((user) => user.id === userId);
+    const statementId = parseInt(req.params.id);
+    const stmtIndex = statements.findIndex((stmt) => stmt.id === statementId);
 
-    if (userIndex !== -1) {
-      const deletedUser = users.splice(userIndex, 1); // Remove the user from the array
-      data = { status: 200, content: deletedUser };
-      logger.info(`User deleted: ${JSON.stringify(deletedUser)}`);
+    if (stmtIndex !== -1) {
+      const deletedStatement = statements.splice(stmtIndex, 1); // Remove the statement from the array
+      data = { status: 200, content: deletedStatement };
+      logger.info(`Statement deleted: ${JSON.stringify(deletedStatement)}`);
     } else {
-      data = { status: 404, content: "User not found" };
-      logger.warn(`User with id ${userId} not found.`);
+      data = { status: 404, content: "Statement not found" };
+      logger.warn(`Statement with id ${statementId} not found.`);
     }
     span.end();
     return data;
   });
 }
 
-app.delete("/users/:id", (req, res) => {
-  const data: { status: number; content: string } = deleteHandler(req);
+app.delete("/statements/:id", (req, res) => {
+  const data: { status: number; content: any } = deleteHandler(req);
   res.status(data.status).json(data.content);
   logger.info(`DELETE request completed with status ${data.status}.`);
 });
 
+// Error generator for demonstration purposes
 function errorCreator() {
   return tracer.startActiveSpan("errorCreator", (span: Span) => {
     let data: { status: number; content: any } = { status: -1, content: null };
