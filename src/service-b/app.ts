@@ -1,5 +1,4 @@
-import { Type } from "./node_modules/event-target-shim/index.d";
-import { Span, trace } from "@opentelemetry/api";
+import { metrics, Span, trace } from "@opentelemetry/api";
 import express, { Express, Request, Response } from "express";
 
 import { getLogger } from "./logger";
@@ -7,6 +6,9 @@ import axios from "axios";
 
 const logger = getLogger();
 const tracer = trace.getTracer("service-b", "0.1.0");
+
+const meter = metrics.getMeter('service-a', '0.1.0');
+const totalRequestCounter = meter.createCounter('total-requests.counter');
 
 const PORT: number = parseInt(process.env.SERVICE_B_PORT || "8081");
 const app: Express = express();
@@ -44,8 +46,18 @@ let statements: Statement[] = [
 
 // GET: Retrieve all statements
 app.get("/statements", (req, res) => {
+  const histogram = meter.createHistogram('get.statements.duration');
+  const startTime = new Date().getTime();
+
+  totalRequestCounter.add(1);
   logger.info("Fetching all statements.");
   res.json(statements);
+  
+  const endTime = new Date().getTime();
+  const executionTime = endTime - startTime;
+
+  // Record the duration of the task operation
+  histogram.record(executionTime);
 });
 
 // POST: Add a new statement
@@ -67,9 +79,19 @@ function postHandler(req: Request) {
 }
 
 app.post("/statements", (req, res) => {
+  const histogram = meter.createHistogram('get.statements.duration');
+  const startTime = new Date().getTime();
+
+  totalRequestCounter.add(1);
   postHandler(req);
   res.status(200).json(statements[statements.length - 1]);
   logger.info("Statement successfully added.");
+  
+  const endTime = new Date().getTime();
+  const executionTime = endTime - startTime;
+
+  // Record the duration of the task operation
+  histogram.record(executionTime);
 });
 
 // PUT: Replace an existing statement by id
@@ -98,9 +120,19 @@ function putHandler(req: Request) {
 }
 
 app.put("/statements/:id", (req, res) => {
+  const histogram = meter.createHistogram('get.statements.duration');
+  const startTime = new Date().getTime();
+
+  totalRequestCounter.add(1);
   const data: { status: number; content: any } = putHandler(req);
   res.status(data.status).json(data.content);
   logger.info(`PUT request completed with status ${data.status}.`);
+  
+  const endTime = new Date().getTime();
+  const executionTime = endTime - startTime;
+
+  // Record the duration of the task operation
+  histogram.record(executionTime);
 });
 
 // PATCH: Partially update a statement by id
@@ -130,9 +162,19 @@ function patchHandler(req: Request) {
 }
 
 app.patch("/statements/:id", (req, res) => {
+  const histogram = meter.createHistogram('get.statements.duration');
+  const startTime = new Date().getTime();
+
+  totalRequestCounter.add(1);
   const data: { status: number; content: any } = patchHandler(req);
   res.status(data.status).json(data.content);
   logger.info(`PATCH request completed with status ${data.status}.`);
+  
+  const endTime = new Date().getTime();
+  const executionTime = endTime - startTime;
+
+  // Record the duration of the task operation
+  histogram.record(executionTime);
 });
 
 // DELETE: Remove a statement by id
@@ -156,9 +198,19 @@ function deleteHandler(req: Request) {
 }
 
 app.delete("/statements/:id", (req, res) => {
+  const histogram = meter.createHistogram('get.statements.duration');
+  const startTime = new Date().getTime();
+
+  totalRequestCounter.add(1);
   const data: { status: number; content: any } = deleteHandler(req);
   res.status(data.status).json(data.content);
   logger.info(`DELETE request completed with status ${data.status}.`);
+  
+  const endTime = new Date().getTime();
+  const executionTime = endTime - startTime;
+
+  // Record the duration of the task operation
+  histogram.record(executionTime);
 });
 
 // Error generator for demonstration purposes
@@ -182,13 +234,27 @@ function errorCreator() {
 }
 
 app.get("/error", (req, res) => {
+  const histogram = meter.createHistogram('get.error.duration');
+  const startTime = new Date().getTime();
+
+  totalRequestCounter.add(1);
   const data = errorCreator();
   logger.info("throwing useless error");
   res.status(data.status).json(data.content);
+  
+  const endTime = new Date().getTime();
+  const executionTime = endTime - startTime;
+
+  // Record the duration of the task operation
+  histogram.record(executionTime);
 });
 
 // GET: Fetch statements with user data from another service
 app.get("/statements_with_user_data", (req: Request, res: Response) => {
+  const histogram = meter.createHistogram('get.statements.duration');
+  const startTime = new Date().getTime();
+
+  totalRequestCounter.add(1);
   logger.info("Fetching all users from service-a.");
 
   return tracer.startActiveSpan("fetchStatementsWithUserData", async (span: Span) => {
@@ -219,6 +285,12 @@ app.get("/statements_with_user_data", (req: Request, res: Response) => {
     } finally {
       span.end(); // Ensure to end the span
     }
+    
+    const endTime = new Date().getTime();
+    const executionTime = endTime - startTime;
+    
+    // Record the duration of the task operation
+    histogram.record(executionTime);
   });
 });
 

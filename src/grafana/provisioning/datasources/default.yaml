@@ -1,19 +1,18 @@
 # Copyright The OpenTelemetry Authors
 # SPDX-License-Identifier: Apache-2.0
 
-
 apiVersion: 1
 
 datasources:
   - name: Prometheus
-    uid: webstore-metrics
+    uid: prometheus
     type: prometheus
     url: http://prometheus:9090
     editable: true
     isDefault: true
     jsonData:
       exemplarTraceIdDestinations:
-        - datasourceUid: webstore-traces
+        - datasourceUid: jaeger
           name: trace_id
 
         - url: http://localhost:8080/jaeger/ui/trace/$${__value.raw}

@@ -134,6 +134,7 @@ services:
     command: -config.file=/etc/loki/local-config.yaml
     profiles:
       - main
+  # Testing
   influxdb:
     image: influxdb:1.8
     container_name: influxdb

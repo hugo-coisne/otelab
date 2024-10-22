@@ -1,10 +1,13 @@
-import { Span, trace } from "@opentelemetry/api";
+import { metrics, Span, trace } from "@opentelemetry/api";
 import express, { Express, Request, Response } from "express";
 
 import { getLogger } from "./logger";
 
 const logger = getLogger();
 const tracer = trace.getTracer("service-a", "0.1.0");
+
+const meter = metrics.getMeter('service-a', '0.1.0');
+const totalRequestCounter = meter.createCounter('total-request.counter');
 
 const PORT: number = parseInt(process.env.SERVICE_PORT || "8080");
 const app: Express = express();
@@ -41,11 +44,22 @@ function getUsers() {
     return users
   })
 }
+
 // GET: Retrieve all users
 app.get("/users", (req, res) => {
+  const histogram = meter.createHistogram('get.users.duration');
+  const startTime = new Date().getTime();
+
+  totalRequestCounter.add(1);
   logger.info("Fetching all users.");
   const users = getUsers();
   res.json(users);
+  
+  const endTime = new Date().getTime();
+  const executionTime = endTime - startTime;
+
+  // Record the duration of the task operation
+  histogram.record(executionTime);
 });
 
 function postHandler(req: Request) {
@@ -64,9 +78,19 @@ function postHandler(req: Request) {
 
 // POST: Add a new user
 app.post("/users", (req, res) => {
+  const histogram = meter.createHistogram('post.users.duration');
+  const startTime = new Date().getTime();
+
+  totalRequestCounter.add(1);
   postHandler(req);
   res.status(200).json(users[users.length - 1]);
   logger.info("User successfully added.");
+
+  const endTime = new Date().getTime();
+  const executionTime = endTime - startTime;
+
+  // Record the duration of the task operation
+  histogram.record(executionTime);
 });
 
 function putHandler(req: Request) {
@@ -95,9 +119,19 @@ function putHandler(req: Request) {
 
 // PUT: Replace an existing user by id
 app.put("/users/:id", (req, res) => {
+  const histogram = meter.createHistogram('put.users.duration');
+  const startTime = new Date().getTime();
+
+  totalRequestCounter.add(1);
   const data: { status: number; content: string } = putHandler(req);
   res.status(data.status).json(data.content);
   logger.info(`PUT request completed with status ${data.status}.`);
+  
+  const endTime = new Date().getTime();
+  const executionTime = endTime - startTime;
+
+  // Record the duration of the task operation
+  histogram.record(executionTime);
 });
 
 function patchHandler(req: Request) {
@@ -127,9 +161,19 @@ function patchHandler(req: Request) {
 
 // PATCH: Partially update a user by id
 app.patch("/users/:id", (req, res) => {
+  const histogram = meter.createHistogram('patch.users.duration');
+  const startTime = new Date().getTime();
+
+  totalRequestCounter.add(1);
   const data: { status: number; content: string } = patchHandler(req);
   res.status(data.status).json(data.content);
   logger.info(`PATCH request completed with status ${data.status}.`);
+  
+  const endTime = new Date().getTime();
+  const executionTime = endTime - startTime;
+
+  // Record the duration of the task operation
+  histogram.record(executionTime);
 });
 
 function deleteHandler(req: Request) {
@@ -152,9 +196,19 @@ function deleteHandler(req: Request) {
 }
 
 app.delete("/users/:id", (req, res) => {
+  const histogram = meter.createHistogram('delete.users.duration');
+  const startTime = new Date().getTime();
+
+  totalRequestCounter.add(1);
   const data: { status: number; content: string } = deleteHandler(req);
   res.status(data.status).json(data.content);
   logger.info(`DELETE request completed with status ${data.status}.`);
+  
+  const endTime = new Date().getTime();
+  const executionTime = endTime - startTime;
+
+  // Record the duration of the task operation
+  histogram.record(executionTime);
 });
 
 function errorCreator() {
@@ -177,9 +231,19 @@ function errorCreator() {
 }
 
 app.get("/error", (req, res) => {
+  const histogram = meter.createHistogram('GET.error.duration');
+  const startTime = new Date().getTime();
+
+  totalRequestCounter.add(1);
   const data = errorCreator();
   logger.info("throwing useless error");
   res.status(data.status).json(data.content);
+  
+  const endTime = new Date().getTime();
+  const executionTime = endTime - startTime;
+
+  // Record the duration of the task operation
+  histogram.record(executionTime);
 });
 
 app.listen(PORT, () => {

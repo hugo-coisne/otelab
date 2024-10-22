@@ -1,13 +1,156 @@
 import http from "k6/http";
 import { sleep } from "k6";
-const BASE_URL = "http://service:8080";
+const BASE_URL_A = "http://service-a:8080";
+const BASE_URL_B = "http://service-b:8081";
 
 export const options = {
-  vus: 10, // Number of virtual users
-  duration: "1m", // Duration of the test
+  // define thresholds
+  thresholds: {
+    http_req_failed: ['rate<0.01'], // http errors should be less than 1%
+    http_req_duration: ['p(99)<1000'], // 99% of requests should be below 1s
+  },
+  // define scenarios
+  scenarios: {
+    // arbitrary name of scenario
+    average_load: {
+      executor: 'ramping-vus',
+      stages: [
+        // ramp up to average load of 20 virtual users
+        { duration: '10s', target: 20 },
+        // maintain load
+        { duration: '50s', target: 20 },
+        // ramp down to zero
+        { duration: '5s', target: 0 },
+      ],
+    },
+  },
 };
 
+function getUsers() {
+  http.get(`${BASE_URL_A}/users`);
+}
+
+function postUser(){
+  const payload = JSON.stringify({
+    name: 'test_case',
+    surname: '1234',
+  });
+  const params = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+
+  // send a post request and save response as a variable
+  http.post(BASE_URL_A+"/users", payload, params);
+}
+
+function putUser() {
+  const payload = JSON.stringify({
+    name: 'test_case',
+    surname: '1234',
+  });
+  const params = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+  http.put(BASE_URL_A+"/users/1", payload, params);
+}
+
+function patchUser() {
+  const payload = JSON.stringify({
+    name: 'test_case',
+  });
+  const params = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+  http.patch(BASE_URL_A+"/users/1", payload, params);
+}
+
+function deleteUser() {
+  http.del(BASE_URL_A+"/users/1");
+}
+
+function getUsersError() {
+  http.get(BASE_URL_A+"/error");
+}
+
+function getUsers() {
+  http.get(`${BASE_URL_B}/users`);
+}
+
+
+
+
+function postUser(){
+  const payload = JSON.stringify({
+    name: 'test_case',
+    surname: '1234',
+  });
+  const params = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+
+  // send a post request and save response as a variable
+  http.post(BASE_URL_B+"/statements", payload, params);
+}
+
+function putUser() {
+  const payload = JSON.stringify({
+    name: 'test_case',
+    surname: '1234',
+  });
+  const params = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+  http.put(BASE_URL_B+"/statements/1", payload, params);
+}
+
+function patchUser() {
+  const payload = JSON.stringify({
+    name: 'test_case',
+  });
+  const params = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+  http.patch(BASE_URL_B+"/statements/1", payload, params);
+}
+
+function deleteUser() {
+  http.del(BASE_URL_B+"/statements/1");
+}
+
+function getStatementsError() {
+  http.get(BASE_URL_B+"/error");
+}
+
+function basicEndpointsTests() {
+  getUsers();
+  postUser();
+  putUser();
+  patchUser();
+  deleteUser();
+  getUsersError();
+
+  getStatements()
+  postStatement();
+  putStatement();
+  patchStatement();
+  deleteStatement();
+  getStatementsError();
+}
+
 export default function () {
-  // Test the /rolldice endpoint
-  const rollsResponse = http.get(`${BASE_URL}/rolldice?rolls=3`);
+  basicEndpointsTests()
+
+  sleep(.1)
 }

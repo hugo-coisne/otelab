@@ -1,0 +1,76 @@
+apiVersion: 1
+contactPoints:
+  - orgId: 1
+    name: discord
+    receivers:
+      - uid: be1lev41aregxe
+        type: discord
+        settings:
+          url: https://discord.com/api/webhooks/1298093183560978442/ZYqOl1R0BsurFqgdFwuSUvmtwbK9DqFomxWQ1PclC8l0nAVTZABqTJjZhV03CsWDkR20
+          use_discord_username: false
+        disableResolveMessage: false
+groups:
+  - orgId: 1
+    name: 10s
+    folder: golden metrics
+    interval: 10s
+    rules:
+      - uid: fe1lg1qcp7uo0e
+        title: high latency
+        condition: C
+        data:
+          - refId: B
+            relativeTimeRange:
+              from: 600
+              to: 0
+            datasourceUid: prometheus
+            model:
+              disableTextWrap: false
+              editorMode: builder
+              expr: get_users_duration_sum{job="service-a"}
+              fullMetaSearch: false
+              hide: false
+              includeNullMetadata: true
+              instant: true
+              intervalMs: 1000
+              legendFormat: __auto
+              maxDataPoints: 43200
+              range: false
+              refId: B
+              useBackend: false
+          - refId: C
+            relativeTimeRange:
+              from: 600
+              to: 0
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 1000
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - C
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: B
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: threshold
+        noDataState: NoData
+        execErrState: Error
+        for: 1m
+        annotations: {}
+        labels: {}
+        isPaused: false
+        notification_settings:
+          receiver: discord
