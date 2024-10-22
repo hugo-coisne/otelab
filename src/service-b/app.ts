@@ -1,18 +1,27 @@
+import { Type } from "./node_modules/event-target-shim/index.d";
 import { Span, trace } from "@opentelemetry/api";
 import express, { Express, Request, Response } from "express";
 
 import { getLogger } from "./logger";
+import axios from "axios";
 
 const logger = getLogger();
 const tracer = trace.getTracer("service-b", "0.1.0");
 
 const PORT: number = parseInt(process.env.SERVICE_B_PORT || "8081");
 const app: Express = express();
+app.use(express.json());
 
 interface Statement {
   id: number;
   UserId: number;
   value: string;
+}
+
+interface User {
+  id: number;
+  name: string;
+  surname: string;
 }
 
 let statements: Statement[] = [
@@ -42,7 +51,10 @@ app.get("/statements", (req, res) => {
 // POST: Add a new statement
 function postHandler(req: Request) {
   return tracer.startActiveSpan("statementPostHandler", (span: Span) => {
-    const maxId = statements.length > 0 ? Math.max(...statements.map((stmt) => stmt.id)) : 0;
+    const maxId =
+      statements.length > 0
+        ? Math.max(...statements.map((stmt) => stmt.id))
+        : 0;
     const statement: Statement = {
       id: maxId + 1, // Generate a unique ID
       UserId: parseInt(req.query.UserId!.toString()),
@@ -173,6 +185,41 @@ app.get("/error", (req, res) => {
   const data = errorCreator();
   logger.info("throwing useless error");
   res.status(data.status).json(data.content);
+});
+
+// GET: Fetch statements with user data from another service
+app.get("/statements_with_user_data", (req: Request, res: Response) => {
+  logger.info("Fetching all users from service-a.");
+
+  return tracer.startActiveSpan("fetchStatementsWithUserData", async (span: Span) => {
+    try {
+      // Fetch users from the external service
+      const response = await axios.get("http://service-a:8080/users");
+      const users = response.data;
+
+      logger.info("Users fetched successfully.");
+
+      // Map statements with corresponding user data
+      const statementsWithUsers = statements.map((statement) => {
+        const user = users.find((u: { id: number }) => u.id === statement.UserId);
+        return {
+          statementId: statement.id,
+          value: statement.value,
+          userName: user ? user.name : "Unknown",
+          userSurname: user ? user.surname : "",
+        };
+      });
+
+      res.status(200).json(statementsWithUsers);
+      logger.info("Statements with user data fetched successfully.");
+    } catch (error) {
+      logger.error("Error fetching users: ", error);
+      res.status(500).json({ error: "Failed to fetch user data." });
+      span.recordException(error as Error); // Record the error in the span
+    } finally {
+      span.end(); // Ensure to end the span
+    }
+  });
 });
 
 app.listen(PORT, () => {

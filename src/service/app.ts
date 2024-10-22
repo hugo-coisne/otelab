@@ -35,9 +35,17 @@ let users: User[] = [
   },
 ];
 
+
+function getUsers() {
+  return tracer.startActiveSpan("getUsers", (span: Span) => {
+    span.end()
+    return users
+  })
+}
 // GET: Retrieve all users
 app.get("/users", (req, res) => {
   logger.info("Fetching all users.");
+  const users = getUsers();
   res.json(users);
 });
 
