@@ -55,7 +55,7 @@ function putUser() {
       'Content-Type': 'application/json',
     },
   };
-  http.put(BASE_URL_A+"/users/1", payload, params);
+  http.put(BASE_URL_A+"/users/4", payload, params);
 }
 
 function patchUser() {
@@ -67,11 +67,11 @@ function patchUser() {
       'Content-Type': 'application/json',
     },
   };
-  http.patch(BASE_URL_A+"/users/1", payload, params);
+  http.patch(BASE_URL_A+"/users/4", payload, params);
 }
 
 function deleteUser() {
-  http.del(BASE_URL_A+"/users/1");
+  http.del(BASE_URL_A+"/users/4");
 }
 
 function getUsersError() {
@@ -85,10 +85,10 @@ function getUsers() {
 
 
 
-function postUser(){
+function postStatement(){
   const payload = JSON.stringify({
-    name: 'test_case',
-    surname: '1234',
+    UserId: 1,
+    value: 'test_case',
   });
   const params = {
     headers: {
@@ -100,33 +100,34 @@ function postUser(){
   http.post(BASE_URL_B+"/statements", payload, params);
 }
 
-function putUser() {
+function putStatement() {
   const payload = JSON.stringify({
-    name: 'test_case',
-    surname: '1234',
+    UserId: 1,
+    value: 'test_case',
   });
   const params = {
     headers: {
       'Content-Type': 'application/json',
     },
   };
-  http.put(BASE_URL_B+"/statements/1", payload, params);
+  http.put(BASE_URL_B+"/statements/4", payload, params);
 }
 
-function patchUser() {
+function patchStatement() {
   const payload = JSON.stringify({
-    name: 'test_case',
+    UserId: 1,
+    value: 'test_case',
   });
   const params = {
     headers: {
       'Content-Type': 'application/json',
     },
   };
-  http.patch(BASE_URL_B+"/statements/1", payload, params);
+  http.patch(BASE_URL_B+"/statements/4", payload, params);
 }
 
-function deleteUser() {
-  http.del(BASE_URL_B+"/statements/1");
+function deleteStatement() {
+  http.del(BASE_URL_B+"/statements/4");
 }
 
 function getStatementsError() {
