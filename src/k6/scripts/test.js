@@ -78,12 +78,9 @@ function getUsersError() {
   http.get(BASE_URL_A+"/error");
 }
 
-function getUsers() {
-  http.get(`${BASE_URL_B}/users`);
+function getStatements() {
+  http.get(`${BASE_URL_B}/statements`);
 }
-
-
-
 
 function postStatement(){
   const payload = JSON.stringify({

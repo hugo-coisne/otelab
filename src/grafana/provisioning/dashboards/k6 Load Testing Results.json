@@ -20,7 +20,7 @@
   "fiscalYearStartMonth": 0,
   "gnetId": 2587,
   "graphTooltip": 2,
-  "id": 1,
+  "id": 3,
   "links": [],
   "panels": [
     {
@@ -52,7 +52,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "influxdb"
+        "uid": "P951FEA4DE68E13C5"
       },
       "fieldConfig": {
         "defaults": {
@@ -120,7 +120,10 @@
       "interval": ">1s",
       "options": {
         "legend": {
-          "calcs": ["max", "min"],
+          "calcs": [
+            "max",
+            "min"
+          ],
           "displayMode": "table",
           "placement": "bottom",
           "showLegend": true
@@ -135,16 +138,20 @@
           "alias": "Active VUs",
           "datasource": {
             "type": "influxdb",
-            "uid": "influxdb"
+            "uid": "P951FEA4DE68E13C5"
           },
           "dsType": "influxdb",
           "groupBy": [
             {
-              "params": ["$__interval"],
+              "params": [
+                "$__interval"
+              ],
               "type": "time"
             },
             {
-              "params": ["none"],
+              "params": [
+                "none"
+              ],
               "type": "fill"
             }
           ],
@@ -156,7 +163,9 @@
           "select": [
             [
               {
-                "params": ["value"],
+                "params": [
+                  "value"
+                ],
                 "type": "field"
               },
               {
@@ -174,7 +183,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "influxdb"
+        "uid": "P951FEA4DE68E13C5"
       },
       "fieldConfig": {
         "defaults": {
@@ -242,7 +251,10 @@
       "interval": "1s",
       "options": {
         "legend": {
-          "calcs": ["mean", "max"],
+          "calcs": [
+            "mean",
+            "max"
+          ],
           "displayMode": "table",
           "placement": "bottom",
           "showLegend": true
@@ -257,16 +269,20 @@
           "alias": "Requests per Second",
           "datasource": {
             "type": "influxdb",
-            "uid": "influxdb"
+            "uid": "P951FEA4DE68E13C5"
           },
           "dsType": "influxdb",
           "groupBy": [
             {
-              "params": ["$__interval"],
+              "params": [
+                "$__interval"
+              ],
               "type": "time"
             },
             {
-              "params": ["null"],
+              "params": [
+                "null"
+              ],
               "type": "fill"
             }
           ],
@@ -278,7 +294,9 @@
           "select": [
             [
               {
-                "params": ["value"],
+                "params": [
+                  "value"
+                ],
                 "type": "field"
               },
               {
@@ -296,7 +314,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "influxdb"
+        "uid": "P951FEA4DE68E13C5"
       },
       "fieldConfig": {
         "defaults": {
@@ -380,7 +398,10 @@
       "interval": "1s",
       "options": {
         "legend": {
-          "calcs": ["mean", "sum"],
+          "calcs": [
+            "mean",
+            "sum"
+          ],
           "displayMode": "table",
           "placement": "bottom",
           "showLegend": true
@@ -395,16 +416,20 @@
           "alias": "Num Errors",
           "datasource": {
             "type": "influxdb",
-            "uid": "influxdb"
+            "uid": "P951FEA4DE68E13C5"
           },
           "dsType": "influxdb",
           "groupBy": [
             {
-              "params": ["$__interval"],
+              "params": [
+                "$__interval"
+              ],
               "type": "time"
             },
             {
-              "params": ["none"],
+              "params": [
+                "none"
+              ],
               "type": "fill"
             }
           ],
@@ -416,7 +441,9 @@
           "select": [
             [
               {
-                "params": ["value"],
+                "params": [
+                  "value"
+                ],
                 "type": "field"
               },
               {
@@ -434,7 +461,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "influxdb"
+        "uid": "P951FEA4DE68E13C5"
       },
       "fieldConfig": {
         "defaults": {
@@ -518,7 +545,10 @@
       "interval": ">1s",
       "options": {
         "legend": {
-          "calcs": ["mean", "sum"],
+          "calcs": [
+            "mean",
+            "sum"
+          ],
           "displayMode": "table",
           "placement": "bottom",
           "showLegend": true
@@ -533,20 +563,26 @@
           "alias": "$tag_check",
           "datasource": {
             "type": "influxdb",
-            "uid": "influxdb"
+            "uid": "P951FEA4DE68E13C5"
           },
           "dsType": "influxdb",
           "groupBy": [
             {
-              "params": ["$__interval"],
+              "params": [
+                "$__interval"
+              ],
               "type": "time"
             },
             {
-              "params": ["check"],
+              "params": [
+                "check"
+              ],
               "type": "tag"
             },
             {
-              "params": ["none"],
+              "params": [
+                "none"
+              ],
               "type": "fill"
             }
           ],
@@ -558,7 +594,9 @@
           "select": [
             [
               {
-                "params": ["value"],
+                "params": [
+                  "value"
+                ],
                 "type": "field"
               },
               {
@@ -603,7 +641,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "influxdb"
+        "uid": "P951FEA4DE68E13C5"
       },
       "fieldConfig": {
         "defaults": {
@@ -651,7 +689,9 @@
         "orientation": "horizontal",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": ["mean"],
+          "calcs": [
+            "mean"
+          ],
           "fields": "",
           "values": false
         },
@@ -664,16 +704,20 @@
         {
           "datasource": {
             "type": "influxdb",
-            "uid": "influxdb"
+            "uid": "P951FEA4DE68E13C5"
           },
           "dsType": "influxdb",
           "groupBy": [
             {
-              "params": ["$__interval"],
+              "params": [
+                "$__interval"
+              ],
               "type": "time"
             },
             {
-              "params": ["null"],
+              "params": [
+                "null"
+              ],
               "type": "fill"
             }
           ],
@@ -686,7 +730,9 @@
           "select": [
             [
               {
-                "params": ["value"],
+                "params": [
+                  "value"
+                ],
                 "type": "field"
               },
               {
@@ -704,7 +750,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "influxdb"
+        "uid": "P951FEA4DE68E13C5"
       },
       "fieldConfig": {
         "defaults": {
@@ -752,7 +798,9 @@
         "orientation": "horizontal",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": ["mean"],
+          "calcs": [
+            "mean"
+          ],
           "fields": "",
           "values": false
         },
@@ -765,16 +813,20 @@
         {
           "datasource": {
             "type": "influxdb",
-            "uid": "influxdb"
+            "uid": "P951FEA4DE68E13C5"
           },
           "dsType": "influxdb",
           "groupBy": [
             {
-              "params": ["$__interval"],
+              "params": [
+                "$__interval"
+              ],
               "type": "time"
             },
             {
-              "params": ["null"],
+              "params": [
+                "null"
+              ],
               "type": "fill"
             }
           ],
@@ -787,7 +839,9 @@
           "select": [
             [
               {
-                "params": ["value"],
+                "params": [
+                  "value"
+                ],
                 "type": "field"
               },
               {
@@ -805,7 +859,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "influxdb"
+        "uid": "P951FEA4DE68E13C5"
       },
       "fieldConfig": {
         "defaults": {
@@ -853,7 +907,9 @@
         "orientation": "horizontal",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": ["mean"],
+          "calcs": [
+            "mean"
+          ],
           "fields": "",
           "values": false
         },
@@ -866,16 +922,20 @@
         {
           "datasource": {
             "type": "influxdb",
-            "uid": "influxdb"
+            "uid": "P951FEA4DE68E13C5"
           },
           "dsType": "influxdb",
           "groupBy": [
             {
-              "params": ["$__interval"],
+              "params": [
+                "$__interval"
+              ],
               "type": "time"
             },
             {
-              "params": ["null"],
+              "params": [
+                "null"
+              ],
               "type": "fill"
             }
           ],
@@ -888,7 +948,9 @@
           "select": [
             [
               {
-                "params": ["value"],
+                "params": [
+                  "value"
+                ],
                 "type": "field"
               },
               {
@@ -906,7 +968,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "influxdb"
+        "uid": "P951FEA4DE68E13C5"
       },
       "fieldConfig": {
         "defaults": {
@@ -954,7 +1016,9 @@
         "orientation": "horizontal",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
@@ -967,16 +1031,20 @@
         {
           "datasource": {
             "type": "influxdb",
-            "uid": "influxdb"
+            "uid": "P951FEA4DE68E13C5"
           },
           "dsType": "influxdb",
           "groupBy": [
             {
-              "params": ["$__interval"],
+              "params": [
+                "$__interval"
+              ],
               "type": "time"
             },
             {
-              "params": ["null"],
+              "params": [
+                "null"
+              ],
               "type": "fill"
             }
           ],
@@ -989,7 +1057,9 @@
           "select": [
             [
               {
-                "params": ["value"],
+                "params": [
+                  "value"
+                ],
                 "type": "field"
               },
               {
@@ -1007,7 +1077,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "influxdb"
+        "uid": "P951FEA4DE68E13C5"
       },
       "fieldConfig": {
         "defaults": {
@@ -1055,7 +1125,9 @@
         "orientation": "horizontal",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": ["mean"],
+          "calcs": [
+            "mean"
+          ],
           "fields": "",
           "values": false
         },
@@ -1068,16 +1140,20 @@
         {
           "datasource": {
             "type": "influxdb",
-            "uid": "influxdb"
+            "uid": "P951FEA4DE68E13C5"
           },
           "dsType": "influxdb",
           "groupBy": [
             {
-              "params": ["$__interval"],
+              "params": [
+                "$__interval"
+              ],
               "type": "time"
             },
             {
-              "params": ["null"],
+              "params": [
+                "null"
+              ],
               "type": "fill"
             }
           ],
@@ -1090,7 +1166,9 @@
           "select": [
             [
               {
-                "params": ["value"],
+                "params": [
+                  "value"
+                ],
                 "type": "field"
               },
               {
@@ -1108,7 +1186,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "influxdb"
+        "uid": "P951FEA4DE68E13C5"
       },
       "fieldConfig": {
         "defaults": {
@@ -1156,7 +1234,9 @@
         "orientation": "horizontal",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": ["mean"],
+          "calcs": [
+            "mean"
+          ],
           "fields": "",
           "values": false
         },
@@ -1169,16 +1249,20 @@
         {
           "datasource": {
             "type": "influxdb",
-            "uid": "influxdb"
+            "uid": "P951FEA4DE68E13C5"
           },
           "dsType": "influxdb",
           "groupBy": [
             {
-              "params": ["$__interval"],
+              "params": [
+                "$__interval"
+              ],
               "type": "time"
             },
             {
-              "params": ["null"],
+              "params": [
+                "null"
+              ],
               "type": "fill"
             }
           ],
@@ -1191,7 +1275,9 @@
           "select": [
             [
               {
-                "params": ["value"],
+                "params": [
+                  "value"
+                ],
                 "type": "field"
               },
               {
@@ -1209,7 +1295,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "influxdb"
+        "uid": "P951FEA4DE68E13C5"
       },
       "description": "Grouped by 1 sec intervals",
       "fieldConfig": {
@@ -1294,16 +1380,20 @@
           "alias": "max",
           "datasource": {
             "type": "influxdb",
-            "uid": "influxdb"
+            "uid": "P951FEA4DE68E13C5"
           },
           "dsType": "influxdb",
           "groupBy": [
             {
-              "params": ["$__interval"],
+              "params": [
+                "$__interval"
+              ],
               "type": "time"
             },
             {
-              "params": ["none"],
+              "params": [
+                "none"
+              ],
               "type": "fill"
             }
           ],
@@ -1317,7 +1407,9 @@
           "select": [
             [
               {
-                "params": ["value"],
+                "params": [
+                  "value"
+                ],
                 "type": "field"
               },
               {
@@ -1332,16 +1424,20 @@
           "alias": "p95",
           "datasource": {
             "type": "influxdb",
-            "uid": "influxdb"
+            "uid": "P951FEA4DE68E13C5"
           },
           "dsType": "influxdb",
           "groupBy": [
             {
-              "params": ["$__interval"],
+              "params": [
+                "$__interval"
+              ],
               "type": "time"
             },
             {
-              "params": ["none"],
+              "params": [
+                "none"
+              ],
               "type": "fill"
             }
           ],
@@ -1355,11 +1451,15 @@
           "select": [
             [
               {
-                "params": ["value"],
+                "params": [
+                  "value"
+                ],
                 "type": "field"
               },
               {
-                "params": [95],
+                "params": [
+                  95
+                ],
                 "type": "percentile"
               }
             ]
@@ -1370,16 +1470,20 @@
           "alias": "p90",
           "datasource": {
             "type": "influxdb",
-            "uid": "influxdb"
+            "uid": "P951FEA4DE68E13C5"
           },
           "dsType": "influxdb",
           "groupBy": [
             {
-              "params": ["$__interval"],
+              "params": [
+                "$__interval"
+              ],
               "type": "time"
             },
             {
-              "params": ["none"],
+              "params": [
+                "none"
+              ],
               "type": "fill"
             }
           ],
@@ -1393,11 +1497,15 @@
           "select": [
             [
               {
-                "params": ["value"],
+                "params": [
+                  "value"
+                ],
                 "type": "field"
               },
               {
-                "params": ["90"],
+                "params": [
+                  "90"
+                ],
                 "type": "percentile"
               }
             ]
@@ -1408,16 +1516,20 @@
           "alias": "min",
           "datasource": {
             "type": "influxdb",
-            "uid": "influxdb"
+            "uid": "P951FEA4DE68E13C5"
           },
           "dsType": "influxdb",
           "groupBy": [
             {
-              "params": ["$__interval"],
+              "params": [
+                "$__interval"
+              ],
               "type": "time"
             },
             {
-              "params": ["none"],
+              "params": [
+                "none"
+              ],
               "type": "fill"
             }
           ],
@@ -1431,7 +1543,9 @@
           "select": [
             [
               {
-                "params": ["value"],
+                "params": [
+                  "value"
+                ],
                 "type": "field"
               },
               {
@@ -1458,7 +1572,7 @@
       "dataFormat": "timeseries",
       "datasource": {
         "type": "influxdb",
-        "uid": "influxdb"
+        "uid": "P951FEA4DE68E13C5"
       },
       "fieldConfig": {
         "defaults": {
@@ -1537,16 +1651,20 @@
         {
           "datasource": {
             "type": "influxdb",
-            "uid": "influxdb"
+            "uid": "P951FEA4DE68E13C5"
           },
           "dsType": "influxdb",
           "groupBy": [
             {
-              "params": ["$__interval"],
+              "params": [
+                "$__interval"
+              ],
               "type": "time"
             },
             {
-              "params": ["null"],
+              "params": [
+                "null"
+              ],
               "type": "fill"
             }
           ],
@@ -1560,7 +1678,9 @@
           "select": [
             [
               {
-                "params": ["value"],
+                "params": [
+                  "value"
+                ],
                 "type": "field"
               },
               {
@@ -1588,7 +1708,7 @@
       }
     },
     {
-      "collapsed": true,
+      "collapsed": false,
       "datasource": {
         "type": "prometheus",
         "uid": "prometheus"
@@ -1614,7 +1734,7 @@
       "type": "row"
     }
   ],
-  "refresh": "auto",
+  "refresh": "5s",
   "schemaVersion": 39,
   "tags": [],
   "templating": {
@@ -1622,8 +1742,14 @@
       {
         "current": {
           "selected": true,
-          "text": ["http_req_duration", "http_req_blocked"],
-          "value": ["http_req_duration", "http_req_blocked"]
+          "text": [
+            "http_req_duration",
+            "http_req_blocked"
+          ],
+          "value": [
+            "http_req_duration",
+            "http_req_blocked"
+          ]
         },
         "hide": 0,
         "includeAll": true,
@@ -1678,8 +1804,8 @@
     ]
   },
   "time": {
-    "from": "2024-10-20T20:39:40.995Z",
-    "to": "2024-10-21T00:39:40.999Z"
+    "from": "now-1h",
+    "to": "now"
   },
   "timepicker": {
     "refresh_intervals": [
@@ -1694,11 +1820,21 @@
       "2h",
       "1d"
     ],
-    "time_options": ["5m", "15m", "1h", "6h", "12h", "24h", "2d", "7d", "30d"]
+    "time_options": [
+      "5m",
+      "15m",
+      "1h",
+      "6h",
+      "12h",
+      "24h",
+      "2d",
+      "7d",
+      "30d"
+    ]
   },
   "timezone": "browser",
-  "title": "k6 Load Testing Results",
-  "uid": "be1hil5yalhxcb",
-  "version": 2,
+  "title": "k6 Load Testing",
+  "uid": "be1ln1kayx7uoc",
+  "version": 1,
   "weekStart": ""
 }
