@@ -1,6 +1,5 @@
 import { Span, trace } from "@opentelemetry/api";
 import express, { Express, Request, Response } from "express";
-import { rollTheDice } from "./dice";
 
 import { getLogger } from "./logger";
 
