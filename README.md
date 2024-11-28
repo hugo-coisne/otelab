@@ -1,6 +1,6 @@
 # OTELAB
 ###### by Coisne Hugo and Léo Saintier
-
+This is a lab assignment in which we used Opentelemetry to observe a simple microservices app.
 ## Requirements
 - Docker
 - Building service images : ```docker build -t otelab-service-a src/service/.``` and ```docker build -t otelab-service-b src/service-b/.```
