@@ -6,7 +6,7 @@ contactPoints:
       - uid: be1lev41aregxe
         type: discord
         settings:
-          url: https://discord.com/api/webhooks/1298093183560978442/ZYqOl1R0BsurFqgdFwuSUvmtwbK9DqFomxWQ1PclC8l0nAVTZABqTJjZhV03CsWDkR20
+          url: https://discord.com/api/webhooks/1310616184290414592/AuJquhOulXe67lkrzUi7FEuRzj0hFoIpevJhqwnx9-BtXH5m33bkS3cCdQwvl9HAFZfn
           use_discord_username: false
         disableResolveMessage: false
 groups:

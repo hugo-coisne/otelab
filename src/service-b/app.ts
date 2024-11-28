@@ -7,7 +7,7 @@ import axios from "axios";
 const logger = getLogger();
 const tracer = trace.getTracer("service-b", "0.1.0");
 
-const meter = metrics.getMeter('service-a', '0.1.0');
+const meter = metrics.getMeter('service-b', '0.1.0');
 const totalRequestCounter = meter.createCounter('total-requests.counter');
 
 const PORT: number = parseInt(process.env.SERVICE_B_PORT || "8081");

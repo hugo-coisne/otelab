@@ -1,0 +1,47 @@
+groups:
+  - name: basics_alerts
+    rules:
+      - alert: HighCPUUsage
+        expr: avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100 < 20
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Utilisation CPU élevée sur {{ $labels.instance }}"
+          description: "L'utilisation CPU est supérieure à 80 % pendant plus de 5 minutes."
+
+      - alert: HighMemoryUsage
+        expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100 > 90
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Utilisation de mémoire élevée sur {{ $labels.instance }}"
+          description: "L'utilisation de la mémoire est supérieure à 90 %."
+
+      - alert: HighHTTPErrorRate
+        expr: sum(rate(http_requests_total{status!~"2.."}[5m])) / sum(rate(http_requests_total[5m])) > 0.05
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Taux d'erreurs HTTP élevé sur {{ $labels.instance }}"
+          description: "Plus de 5 % des requêtes HTTP échouent."
+
+      - alert: HighHTTPResponseTime
+        expr: avg(rate(http_response_time_seconds_sum[5m])) / avg(rate(http_response_time_seconds_count[5m])) > 0.5
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Temps de réponse HTTP élevé sur {{ $labels.instance }}"
+          description: "Le temps de réponse HTTP moyen dépasse 500 ms."
+
+      - alert: HighDiskUsage
+        expr: (node_filesystem_size_bytes - node_filesystem_free_bytes) / node_filesystem_size_bytes * 100 > 90
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Utilisation de disque élevée sur {{ $labels.instance }}"
+          description: "L'utilisation du disque est supérieure à 90 %."
